@@ -1,5 +1,5 @@
 let form = document.querySelector("form");
-const refundsArray = [];
+let refundsArray = [];
 
 class Refund {
   constructor(title, category, amount) {
@@ -12,7 +12,7 @@ class Refund {
 
 function addRefundToArray(refund) {
   refundsArray.push(refund);
-  //console.log(refundsArray);
+  console.log(refundsArray);
 }
 
 function calculateTotalAmountRefunded(refundsArray) {
@@ -58,6 +58,7 @@ function createItemRefund(refundsArray) {
   refundsArray.forEach((item) => {
     let li = document.createElement("li");
     li.setAttribute("class", "expense");
+    li.setAttribute("data-id", `${item.id}`);
 
     let iconCategory = document.createElement("img");
     iconCategory.setAttribute("src", "./assets/images/food.svg");
@@ -81,6 +82,12 @@ function createItemRefund(refundsArray) {
     removeRefund.setAttribute("src", "./assets/images/remove.svg");
     removeRefund.setAttribute("class", "remove-icon");
 
+    removeRefund.addEventListener("click", () => {
+      let itemId = li.getAttribute("data-id");
+
+      removeItemRefund(itemId);
+    });
+
     ul.appendChild(li);
     li.appendChild(iconCategory);
     li.appendChild(div);
@@ -89,4 +96,14 @@ function createItemRefund(refundsArray) {
     li.appendChild(amount);
     li.appendChild(removeRefund);
   });
+}
+
+function removeItemRefund(id) {
+  refundsArray = refundsArray.filter((refund) => refund.id !== id);
+  console.log(refundsArray);
+
+  calculateTotalAmountRefunded(refundsArray);
+  calculateRefundsQuantity(refundsArray);
+
+  createItemRefund(refundsArray);
 }
