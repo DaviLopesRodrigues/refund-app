@@ -12,17 +12,25 @@ class Refund {
 
 function addRefundToArray(refund) {
   refundsArray.push(refund);
-  console.log(refundsArray);
+  //console.log(refundsArray);
 }
 
-function calculateTotalRefund(refundsArray) {
-  return refundsArray.reduce((accumulator, refund) => {
+function calculateTotalAmountRefunded(refundsArray) {
+  let totalAmountRefunded = document.querySelector("#totalAmountRefunded");
+
+  let total = refundsArray.reduce((accumulator, refund) => {
     return accumulator + refund.amount;
   }, 0);
+
+  totalAmountRefunded.innerText = `${total.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  })}`;
 }
 
 function calculateRefundsQuantity(refundsArray) {
-  return refundsArray.length;
+  let totalRefundsQuantity = document.querySelector("#totalRefundsQuantity");
+  totalRefundsQuantity.innerText = `${refundsArray.length}`;
 }
 
 form.addEventListener("submit", (event) => {
@@ -32,44 +40,53 @@ form.addEventListener("submit", (event) => {
   const refundAmount = document.querySelector("#refundAmount").value;
 
   let refund = new Refund(refundTitle, refundCategory, refundAmount);
-  addRefundToArray(refund);
-  let totalSumRefunds = calculateTotalRefund(refundsArray);
-  console.log(totalSumRefunds);
-  let totalRefundRequests = calculateRefundsQuantity(refundsArray);
-  console.log(totalRefundRequests);
 
-  createTags(refundsArray);
+  addRefundToArray(refund);
+
+  calculateTotalAmountRefunded(refundsArray);
+
+  calculateRefundsQuantity(refundsArray);
+
+  createItemRefund(refundsArray);
 });
 
-function createTags(refundsArray) {
+function createItemRefund(refundsArray) {
   let ul = document.querySelector("#refundRequestsList");
-  let li = document.createElement("li");
-  li.setAttribute("class", "expense");
-  let iconCategory = document.createElement("img");
-  iconCategory.setAttribute("src", "./assets/images/food.svg");
-  let div = document.createElement("div");
-  div.setAttribute("class", "expense-info");
-  let title = document.createElement("strong");
-  let category = document.createElement("span");
 
-  let amount = document.createElement("span");
-
-  let removeRefund = document.createElement("img");
-  removeRefund.setAttribute("src", "./assets/images/remove.svg");
-  removeRefund.setAttribute("class", "remove-icon");
+  ul.innerHTML = "";
 
   refundsArray.forEach((item) => {
+    let li = document.createElement("li");
+    li.setAttribute("class", "expense");
+
+    let iconCategory = document.createElement("img");
+    iconCategory.setAttribute("src", "./assets/images/food.svg");
+
+    let div = document.createElement("div");
+    div.setAttribute("class", "expense-info");
+
+    let title = document.createElement("strong");
     title.innerText = `${item.title}`;
+
+    let category = document.createElement("span");
     category.innerText = `${item.category}`;
-    amount.innerText = `${item.amount}`;
+
+    let amount = document.createElement("span");
+    amount.innerText = `${item.amount.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    })}`;
+
+    let removeRefund = document.createElement("img");
+    removeRefund.setAttribute("src", "./assets/images/remove.svg");
+    removeRefund.setAttribute("class", "remove-icon");
+
+    ul.appendChild(li);
+    li.appendChild(iconCategory);
+    li.appendChild(div);
+    div.appendChild(title);
+    div.appendChild(category);
+    li.appendChild(amount);
+    li.appendChild(removeRefund);
   });
-
-  ul.appendChild(li);
-  li.appendChild(iconCategory);
-  li.appendChild(div);
-  div.appendChild(title);
-  div.appendChild(category);
-
-  li.appendChild(amount);
-  li.appendChild(removeRefund);
 }
