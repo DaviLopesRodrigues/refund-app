@@ -50,9 +50,31 @@ form.addEventListener("submit", (event) => {
   createItemRefund(refundsArray);
 });
 
+let categoriesAndIcons = {
+  food: {
+    category_pt_br: "Alimentação",
+    icon: "assets/images/food.svg",
+  },
+  accommodation: {
+    category_pt_br: "Acomodação",
+    icon: "assets/images/accommodation.svg",
+  },
+  services: {
+    category_pt_br: "Seviços",
+    icon: "assets/images/services.svg",
+  },
+  transport: {
+    category_pt_br: "Transporte",
+    icon: "assets/images/transport.svg",
+  },
+  others: {
+    category_pt_br: "Outros",
+    icon: "assets/images/others.svg",
+  },
+};
+
 function createItemRefund(refundsArray) {
   let ul = document.querySelector("#refundRequestsList");
-
   ul.innerHTML = "";
 
   refundsArray.forEach((item) => {
@@ -61,7 +83,11 @@ function createItemRefund(refundsArray) {
     li.setAttribute("data-id", `${item.id}`);
 
     let iconCategory = document.createElement("img");
-    iconCategory.setAttribute("src", "./assets/images/food.svg");
+    iconCategory.setAttribute(
+      "src",
+      `${categoriesAndIcons[item.category]["icon"]}`
+    );
+    iconCategory.setAttribute("id", "categoryIcon");
 
     let div = document.createElement("div");
     div.setAttribute("class", "expense-info");
@@ -70,7 +96,7 @@ function createItemRefund(refundsArray) {
     title.innerText = `${item.title}`;
 
     let category = document.createElement("span");
-    category.innerText = `${item.category}`;
+    category.innerText = `${categoriesAndIcons[item.category]["category_pt_br"]}`;
 
     let amount = document.createElement("span");
     amount.innerText = `${item.amount.toLocaleString("pt-BR", {
