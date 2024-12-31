@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <link
+      rel="shortcut icon"
+      href="./assets/images/iconRefund.svg"
+      type="image/x-icon"
+    />
+
+    <title>Refund</title>
+  </head>
+
+  <body>
+    <main>
+     
+      <section>
+        <form>
+          <h1>Solicitação de reembolso</h1>
+          <p>
+            Informe os dados da despesa para solicitar reembolso. A despesa será
+            analisada e reembolsada em até 30 dias.
+          </p>
+
+          <fieldset>
+            <legend>Nome da despesa</legend>
+            <input id="refundTitle" type="text" name="expense" required />
+          </fieldset>
+
+          <div class="inputs-row">
+            <fieldset>
+              <legend>Categoria</legend>
+              <select id="refundCategory" name="category" required>
+                <option value="" disabled selected hidden>Selecione</option>
+                <option value="food">Alimentação</option>
+                <option value="accommodation">Hospedagem</option>
+                <option value="services">Serviços</option>
+                <option value="transport">Transporte</option>
+                <option value="others">Outros</option>
+              </select>
+            </fieldset>
+
+            <fieldset>
+              <legend>Valor da despesa</legend>
+              <input
+                id="refundAmount"
+                type="text"
+                name="amount"
+                placeholder="0,00"
+                required
+              />
+            </fieldset>
+          </div>
+
+          <button type="submit">Adicionar despesa</button>
+        </form>
+
+        <aside>
+          <header>
+            <p>
+              Minhas solicitações <i>&bullet;</i>
+              <span>0 despesas</span>
+            </p>
+            <h2><small>R$</small>0,00</h2>
+          </header>
+          <!-- <ul> Tag para armazenar as solicitações de reembolso (itens) -->
+          <ul id="refundRequestsList">
+            <!-- <li> Tag para criação de solicitação de reembolso (item) -->
+            <!-- <li id="refundRequestItem" class="expense">
+              <img
+                id="categoryIcon"
+                src="./assets/images/food.svg"
+                alt="Ícone de tipo da despesa"
+              />
+
+              <div class="expense-info">
+                <strong id="refundTitle">Almoço</strong>
+                <span id="refundCategory">Alimentação</span>
+              </div>
+
+              <span id="refundAmount" class="expense-amount"
+                ><small>R$</small>1.420,57</span
+              >
+
+              <img
+                src="./assets/images/remove.svg"
+                alt="remover"
+                class="remove-icon"
+              />
+            </li> -->
+          </ul>
+        </aside>
+      </section>
+    </main>
+    <script src="./scripts.js"></script>
+  </body>
+</html>
