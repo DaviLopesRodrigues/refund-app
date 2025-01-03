@@ -10,8 +10,23 @@ class Refund {
   }
 }
 
+function saveToLocalStorage() {
+  localStorage.setItem("refunds", JSON.stringify(refundsArray));
+}
+
+function loadFromLocalStorage() {
+  const savedRefunds = localStorage.getItem("refunds");
+  if (savedRefunds) {
+    refundsArray = JSON.parse(savedRefunds);
+    createItemRefund(refundsArray);
+    calculateTotalAmountRefunded(refundsArray);
+    calculateRefundsQuantity(refundsArray);
+  }
+}
+
 function addRefundToArray(refund) {
   refundsArray.push(refund);
+  saveToLocalStorage();
   console.log(refundsArray);
 }
 
@@ -48,6 +63,12 @@ form.addEventListener("submit", (event) => {
   calculateRefundsQuantity(refundsArray);
 
   createItemRefund(refundsArray);
+
+  clearInputs(
+    document.querySelector("#refundTitle"),
+    document.querySelector("#refundCategory"),
+    document.querySelector("#refundAmount")
+  );
 });
 
 let categoriesAndIcons = {
@@ -96,7 +117,9 @@ function createItemRefund(refundsArray) {
     title.innerText = `${item.title}`;
 
     let category = document.createElement("span");
-    category.innerText = `${categoriesAndIcons[item.category]["category_pt_br"]}`;
+    category.innerText = `${
+      categoriesAndIcons[item.category]["category_pt_br"]
+    }`;
 
     let amount = document.createElement("span");
     amount.innerText = `${item.amount.toLocaleString("pt-BR", {
@@ -126,10 +149,17 @@ function createItemRefund(refundsArray) {
 
 function removeItemRefund(id) {
   refundsArray = refundsArray.filter((refund) => refund.id !== id);
-  console.log(refundsArray);
 
+  saveToLocalStorage();
   calculateTotalAmountRefunded(refundsArray);
   calculateRefundsQuantity(refundsArray);
-
   createItemRefund(refundsArray);
 }
+
+function clearInputs(refundTitle, refundCategory, refundAmount) {
+  refundTitle.value = "";
+  refundCategory.value = "";
+  refundAmount.value = "";
+}
+
+loadFromLocalStorage();
