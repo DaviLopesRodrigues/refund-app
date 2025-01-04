@@ -1,77 +1,13 @@
-let form = document.querySelector("form");
+const form = document.querySelector("form");
+const refundTitle = document.querySelector("#refundTitle");
+const refundCategory = document.querySelector("#refundCategory");
+const refundAmount = document.querySelector("#refundAmount");
+const totalAmountRefunded = document.querySelector("#totalAmountRefunded");
+const totalRefundsQuantity = document.querySelector("#totalRefundsQuantity");
+
 let refundsArray = [];
 
-class Refund {
-  constructor(title, category, amount) {
-    this.id = crypto.randomUUID();
-    this.title = String(title);
-    this.category = String(category);
-    this.amount = Number(amount);
-  }
-}
-
-function saveToLocalStorage() {
-  localStorage.setItem("refunds", JSON.stringify(refundsArray));
-}
-
-function loadFromLocalStorage() {
-  const savedRefunds = localStorage.getItem("refunds");
-  if (savedRefunds) {
-    refundsArray = JSON.parse(savedRefunds);
-    createItemRefund(refundsArray);
-    calculateTotalAmountRefunded(refundsArray);
-    calculateRefundsQuantity(refundsArray);
-  }
-}
-
-function addRefundToArray(refund) {
-  refundsArray.push(refund);
-  saveToLocalStorage();
-  console.log(refundsArray);
-}
-
-function calculateTotalAmountRefunded(refundsArray) {
-  let totalAmountRefunded = document.querySelector("#totalAmountRefunded");
-
-  let total = refundsArray.reduce((accumulator, refund) => {
-    return accumulator + refund.amount;
-  }, 0);
-
-  totalAmountRefunded.innerText = `${total.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  })}`;
-}
-
-function calculateRefundsQuantity(refundsArray) {
-  let totalRefundsQuantity = document.querySelector("#totalRefundsQuantity");
-  totalRefundsQuantity.innerText = `${refundsArray.length}`;
-}
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const refundTitle = document.querySelector("#refundTitle").value;
-  const refundCategory = document.querySelector("#refundCategory").value;
-  const refundAmount = document.querySelector("#refundAmount").value;
-
-  let refund = new Refund(refundTitle, refundCategory, refundAmount);
-
-  addRefundToArray(refund);
-
-  calculateTotalAmountRefunded(refundsArray);
-
-  calculateRefundsQuantity(refundsArray);
-
-  createItemRefund(refundsArray);
-
-  clearInputs(
-    document.querySelector("#refundTitle"),
-    document.querySelector("#refundCategory"),
-    document.querySelector("#refundAmount")
-  );
-});
-
-let categoriesAndIcons = {
+const categoriesAndIcons = {
   food: {
     category_pt_br: "Alimentação",
     icon: "assets/images/food.svg",
@@ -93,6 +29,63 @@ let categoriesAndIcons = {
     icon: "assets/images/others.svg",
   },
 };
+
+class Refund {
+  constructor(title, category, amount) {
+    this.id = crypto.randomUUID();
+    this.title = String(title);
+    this.category = String(category);
+    this.amount = Number(amount);
+  }
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem("refunds", JSON.stringify(refundsArray));
+}
+
+function loadFromLocalStorage() {
+  const savedRefunds = localStorage.getItem("refunds");
+  if (savedRefunds) {
+    refundsArray = JSON.parse(savedRefunds);
+    createItemRefund(refundsArray);
+    updateStatistics(refundsArray);
+  }
+}
+
+function addRefundToArray(refund) {
+  refundsArray.push(refund);
+  saveToLocalStorage();
+}
+
+function updateStatistics(refundsArray) {
+  let total = refundsArray.reduce((accumulator, refund) => {
+    return accumulator + refund.amount;
+  }, 0);
+
+  totalAmountRefunded.innerText = `${total.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  })}`;
+
+  totalRefundsQuantity.innerText = `${refundsArray.length}`;
+}
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  let refund = new Refund(
+    refundTitle.value,
+    refundCategory.value,
+    refundAmount.value
+  );
+
+  addRefundToArray(refund);
+
+  updateStatistics(refundsArray);
+
+  createItemRefund(refundsArray);
+
+  clearInputs(refundTitle, refundCategory, refundAmount);
+});
 
 function createItemRefund(refundsArray) {
   let ul = document.querySelector("#refundRequestsList");
@@ -148,18 +141,23 @@ function createItemRefund(refundsArray) {
 }
 
 function removeItemRefund(id) {
-  refundsArray = refundsArray.filter((refund) => refund.id !== id);
-
-  saveToLocalStorage();
-  calculateTotalAmountRefunded(refundsArray);
-  calculateRefundsQuantity(refundsArray);
-  createItemRefund(refundsArray);
+  if (id !== null) {
+    refundsArray = refundsArray.filter((refund) => refund.id !== id);
+    saveToLocalStorage();
+    updateStatistics(refundsArray);
+    const itemToRemove = document.querySelector(`[data-id="${id}"]`);
+    if (itemToRemove) {
+      itemToRemove.remove();
+    } else {
+      alert("Erro ao excluir item");
+    }
+  }
 }
 
-function clearInputs(refundTitle, refundCategory, refundAmount) {
-  refundTitle.value = "";
-  refundCategory.value = "";
-  refundAmount.value = "";
+function clearInputs(inputRefundTitle, inputRefundCategory, inputRefundAmount) {
+  inputRefundTitle.value = "";
+  inputRefundCategory.value = "";
+  inputRefundAmount.value = "";
 }
 
 loadFromLocalStorage();
